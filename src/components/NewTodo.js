@@ -50,10 +50,10 @@ const Button = styled.button`
     &:hover {
         opacity: .8;
         transition: 0.2s;
-        bottom: 2px;
+        transform: translateY(-2px);
     }
     &:active {
-        top: 4px;
+        transform: translateY(4px);
     }
 `
 
