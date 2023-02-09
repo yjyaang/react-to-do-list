@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components';
 import NewTodo from './components/NewTodo';
 import {useState} from 'react'
-import { todos } from './components/data/Todo'
 
 
 const GlobalStyle = createGlobalStyle`
@@ -19,16 +18,15 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
-  const [todo, setTodo] = useState(todos)
+  const [newTodo, setNewTodo] = useState([]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <GlobalStyle />
       <Header />
       <Routes>
-        {/* <Route path="/" element={<Start />} /> */}
-        <Route path="/" element={<Main todo={todo} setTodo={setTodo}/>} />
-        <Route path="/newtodo" element={<NewTodo setTodo={setTodo} todo={todo}/>} />
+        <Route path="/" element={<Main newTodo={newTodo} setNewTodo={setNewTodo}/>} />
+        <Route path="/newtodo" element={<NewTodo newTodo={newTodo}/>} />
       </Routes>
     </BrowserRouter>
   );

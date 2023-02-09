@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import {useState} from 'react'
+import { database } from '../Firebase'
+import { doc, setDoc } from "firebase/firestore";
 
 const Container = styled.div`
     display: flex;
@@ -58,32 +60,32 @@ const Button = styled.button`
 // 들어갈 것: 제목(할 일 추가하기), 인풋, 추가 버튼, 취소 버튼
 // 추가 버튼을 누르면 setTodo로 todo에 새 할 일 추가, useNavigate로 이동
 
-const NewTodo = ({todo, setTodo}) => {
+const NewTodo = ({newTodo}) => {
 
-    const [newTodo, setNewTodo] = useState('');
+    const [content, setContent] = useState('');
     const navigate = useNavigate();
 
-    const clickHandler = () => {
-        if(newTodo !== '') {
+    const clickHandler = async() => {
+        const newid = String(newTodo.length);
+        if(content !== '') {
             const arr = {
-                id: todo.length,
-                work: newTodo
+                todo: content
             }
-            setTodo([...todo, arr])
+            await setDoc(doc(database, "todo", newid), arr);
             navigate("/")
         }
     }
 
     const changeHandler = (e) => {
-        setNewTodo(e.target.value)
+        setContent(e.target.value)
     }
     return (
         <Container>
             <NewContainer>
                 <h1>할 일 추가하기</h1>
                 <InputContainer>
-                    <InputLabel for="newtodo">할 일</InputLabel>
-                    <NewTodoInput type="text" id="newtodo" value={newTodo} onChange={changeHandler} />
+                    <InputLabel htmlFor="newtodo">할 일</InputLabel>
+                    <NewTodoInput type="text" id="newtodo" value={content} onChange={changeHandler} />
                 </InputContainer>
                 <InputContainer>
                     <Button onClick={clickHandler}>추가하기</Button>

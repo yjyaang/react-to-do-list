@@ -1,7 +1,10 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
 import Todos from './Todos'
 import { Link } from 'react-router-dom'
+import { database } from '../Firebase'
+// db에 접근해서 데이터를 꺼내게 도와줄 친구들
+import { collection, getDocs } from "firebase/firestore";
 
 const Container = styled.div`
     display: flex;
@@ -52,14 +55,29 @@ const TodoUl = styled.ul`
 // 나열되어야 할 요소: 할 일 이름, 체크박스, 수정 버튼, 삭제 버튼
 
 
-const Main = ({todo, setTodo}) => {
+const Main = ({newTodo, setNewTodo}) => {
+    
+    const usersCollectionRef = collection(database, "todo");
+
+    useEffect(() => {
+        // 비동기로 데이터 받을준비
+        const getTodos = async () => {
+            // getDocs로 컬렉션안에 데이터 가져오기
+            const data = await getDocs(usersCollectionRef);
+            // users에 data안의 자료 추가. 객체에 id 덮어씌우는거
+            setNewTodo(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        }
+        getTodos();
+    }, [])
+
+
     return (
         <Container>
             <MainContainer>
                 <Link to='/newTodo'><NewTodoBtn>할 일 추가하기</NewTodoBtn></Link>
                 <TodoUl>
-                    {todo.map((el) => {
-                        return <Todos id={el.id} work={el.work} todo={todo} setTodo={setTodo}/>
+                    {newTodo.map((el) => {
+                        return <Todos key={el.id} id={el.id} work={el.todo} isDone={el.isDone} setNewTodo={setNewTodo}/>
                     })}
                 </TodoUl>
             </MainContainer>

@@ -42,7 +42,7 @@ const Header = () => {
                     <h2>TO DO LIST</h2>
                 </HeaderDiv>
                 <IconDiv>
-                    <i class="fa-solid fa-bars"></i>
+                    <i className="fa-solid fa-bars"></i>
                 </IconDiv>
             </HeaderContainer>
         </Container>
